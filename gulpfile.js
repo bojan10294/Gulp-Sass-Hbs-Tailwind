@@ -72,18 +72,11 @@ function Handlebars() {
           }
       }
   }
-  console.log('pocetak')
-  console.log(src('./views/*.hbs').pipe(handlebars(templateData, options)))
-  console.log('kraj')
   return src('./views/*.hbs')
       .pipe(handlebars(templateData, options))
       .pipe(rename(path => {
-        console.log('object-start');
-        console.log(path);
-        console.log('end-start');
         path.extname = '.html'
       }))
-      // .pipe(rename('main.html'))
       .pipe(dest('dist'));
 }
 
@@ -113,7 +106,7 @@ function devImages(){
 
 function watchFiles(){
   watch(`${options.paths.src.base}/**/*.html`,series(devHTML, devStyles, previewReload));
-  watch(`views/**/*.hbs`, series(Handlebars));
+  watch(`views/**/*.hbs`, series(Handlebars, devStyles, previewReload));
   watch([options.config.tailwindjs, `${options.paths.src.css}/**/*.scss`],series(devStyles, previewReload));
   watch(`${options.paths.src.js}/**/*.js`,series(devScripts, previewReload));
   watch(`${options.paths.src.img}/**/*`,series(devImages, previewReload));
@@ -133,7 +126,7 @@ function prodHTML(){
 function prodStyles(){
   return src(`${options.paths.dist.css}/**/*`)
   .pipe(purgecss({
-    content: ['src/**/*.{html,js}'],
+    content: ['src/**/*.{html, js, hbs}'],
     defaultExtractor: content => {
       const broadMatches = content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || []
       const innerMatches = content.match(/[^<>"'`\s.()]*[^<>"'`\s.():]/g) || []
