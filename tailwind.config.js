@@ -1,6 +1,6 @@
 module.exports = {
   mode: 'jit', // Just-In-Time Compiler
-  purge: ['./src/**/*.html'],
+  purge: ['./views/**/*.hbs'],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
